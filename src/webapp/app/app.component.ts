@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { MessagingService } from './services/messaging/messaging.service';
 
 @Component({
 	selector: 'app-root',
@@ -8,6 +9,10 @@ import { Component } from '@angular/core';
 export class AppComponent {
 	title = 'angular-electron-boilerplate';
 
-	constructor() { }
+	constructor(private __msg : MessagingService) { 
+		
+		//Send an initialization log message to the application
+		__msg.send('debug', {'msg':'Intializing the UI...'});
+	}
 
 }

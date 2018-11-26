@@ -31,13 +31,24 @@ export class MessagingService {
 		}
 	}
 
+	//Internal function for callbacks
 	__callback(channel : string, payload, event) {
 		if (this._listeners != null && this._listeners[channel] != null) {
-			this._listeners[channel].call(payload, channel, this._listeners[channel].args, event);
+
+			//Iterate through each of the listeners and invoke them
+			this._listeners[channel].forEach(listener => {
+				listener.call(payload, channel, listener.args, event);
+			});
 		}
 
 		if (this._singleTimeListeners != null && this._singleTimeListeners[channel] != null) {
-			this._singleTimeListeners[channel].call(payload, channel, this._listeners[channel].args, event);
+			
+			//Iterate through each of the listeners and invoke them
+			this._singleTimeListeners[channel].forEach(listener => {
+				listener.call(payload, channel, listener.args, event);
+			});
+
+			//Delete the single-time listener channel
 			delete this._singleTimeListeners[channel];
 		}
 	}
@@ -87,7 +98,9 @@ export class MessagingService {
 	//Request for a response through a specified channel
 	request(channel: string, payload, action) {
 		//Create a listener for the channel
-		this.listenOnce(channel, action, payload);
+		this.listenOnce(channel, function(channel:string, payloadOut, event) {
+			action(payloadOut);
+		}, payload);
 
 		//Send the channel request to the application
 		this.send(channel, payload);

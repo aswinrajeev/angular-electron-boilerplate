@@ -1,33 +1,41 @@
 import { app, BrowserWindow } from 'electron';
-import { ipcMain } from 'electron';
+import { ipcMain, WebContents } from 'electron';
+
+const MessagingService = require('./messaging.js');
 
 class MainWindow {
 
 	mainWindow;
+	messenger;
 
 	constructor() {
-		app.on('ready', this.createUI);
+		app.on('ready', this.initializeApp);
 	}
 
-	createUI = function() {
+	initializeApp() {
 
+		//Initialize a new window
 		this.mainWindow = new BrowserWindow({ 
 			width: 1080, 
 			height: 640, 
 			show: false
 		});
 
-		console.log('Initializing...')
-
+		//Load the compiled index.html file
 		this.mainWindow.loadFile('./dist/angular-electron-boilerplate/index.html');
 
+		//Display the window once ready
 		this.mainWindow.once('ready-to-show', () => {
 			this.mainWindow.show();
 		});
 
-		ipcMain.on('test', function(event, ags) {
-			console.log('testing...');
-		})
+		//Initialize messaging service
+		this.messenger = new MessagingService(ipcMain, this.mainWindow.WebContents);
+
+		//Register a debug log listener
+		this.messenger.listen('debug', function(payload) {
+			console.log(payload.msg);
+		});
 	}
 	
 }

@@ -22,7 +22,7 @@
   },
   "homepage": "https://github.com/aswinrajeev/angular-electron-boilerplate#readme",
   "scripts": {
-    "build-app": "pushd src/electron && tsc && popd && ng build --base-href ./ && electron .",
+    "application": "pushd src/electron && tsc && popd && ng build --base-href ./ && electron .",
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
