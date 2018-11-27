@@ -30,12 +30,19 @@ class MainWindow {
 		});
 
 		//Initialize messaging service
-		this.messenger = new MessagingService(ipcMain, this.mainWindow.WebContents);
+		this.messenger = new MessagingService(ipcMain, this.mainWindow.webContents);
 
 		//Register a debug log listener
 		this.messenger.listen('debug', function(payload) {
 			console.log(payload.msg);
 		});
+
+		//Respond in the event of a request test
+		this.messenger.respond('reqtest', function(payload, event) {
+			console.log(payload.msg);
+			return payload.msg + ' acknowledged';
+		});
+
 	}
 	
 }

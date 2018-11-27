@@ -59,11 +59,13 @@ export class MessagingService {
 			this._listeners = new Object();
 		}
 
+		let that = this;
+
 		//Create the channel if not exist
 		if (this._listeners[channel] == null) {
 			this._listeners[channel] = new Array();
 			this._ipc.on(channel, function(event, args) {
-				this.__callback(channel, args, event);
+				that.__callback(channel, args, event);
 			});
 		}
 
@@ -80,11 +82,13 @@ export class MessagingService {
 			this._singleTimeListeners = new Object();
 		}
 
+		let that = this;
+
 		//Create the channel if not exist
 		if (this._singleTimeListeners[channel] == null) {
 			this._singleTimeListeners[channel] = new Array();
 			this._ipc.once(channel, function(event, args) {
-				this.__callback(channel, args, event);
+				that.__callback(channel, args, event);
 			});
 		}
 
@@ -98,7 +102,7 @@ export class MessagingService {
 	//Request for a response through a specified channel
 	request(channel: string, payload, action) {
 		//Create a listener for the channel
-		this.listenOnce(channel, function(channel:string, payloadOut, event) {
+		this.listenOnce(channel, function( payloadOut, channel:string, event) {
 			action(payloadOut);
 		}, payload);
 

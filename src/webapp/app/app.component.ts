@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { MessagingService } from './services/messaging/messaging.service';
 
 @Component({
@@ -13,6 +13,12 @@ export class AppComponent {
 		
 		//Send an initialization log message to the application
 		__msg.send('debug', {'msg':'Intializing the UI...'});
+
+		//Request for a test request acknowledgement
+		__msg.request('reqtest', {msg: 'testing request'}, (payload) => {
+			console.log(payload);
+		} );
+		
 	}
 
 }
